@@ -1,20 +1,24 @@
-import { Layout, List, Text } from '@ui-kitten/components';
-import { Fragment } from 'react';
-import { Image } from 'react-native';
-
 import { useThemeColor } from '@/hooks/useThemeColor';
 import {
   ImagesMessage,
   Message,
   TextMessage,
 } from '@/interfaces/chat.interfaces';
+import { Layout, List, Text } from '@ui-kitten/components';
+import { Fragment } from 'react';
+import { Image } from 'react-native';
+import Markdown from 'react-native-markdown-display';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 interface Props {
   messages: Message[];
+  isGeminiWriting: boolean;
 }
 
-export const ChatMessages = ({ messages }: Props) => {
+export const ChatMessages = ({ messages, isGeminiWriting }: Props) => {
   const primaryColor = useThemeColor({}, 'icon');
+
+  const bgColor = useThemeColor({}, 'background');
 
   return (
     <Layout style={{ flex: 1 }}>
@@ -40,6 +44,20 @@ export const ChatMessages = ({ messages }: Props) => {
           );
         }}
       />
+
+      {
+        isGeminiWriting && (
+          <Animated.View style={{
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            backgroundColor: bgColor,
+          }}
+            entering={FadeInDown}
+          >
+            <Text>Gemini está escribiendo...</Text>
+          </Animated.View>
+        )
+      }
     </Layout>
   );
 };
@@ -52,6 +70,18 @@ const MessageItem = ({
   userColor: string;
 }) => {
   const isCurrentUser = message.sender === 'user';
+
+  const markdownStyles = {
+    body: {
+      color: isCurrentUser ? 'white' : 'black',
+    },
+    paragraph: {
+      color: isCurrentUser ? 'white' : 'black',
+    },
+    text: {
+      color: isCurrentUser ? 'white' : 'black',
+    }
+  };
 
   return (
     <Layout
@@ -67,9 +97,7 @@ const MessageItem = ({
         alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
       }}
     >
-      <Text style={{ color: isCurrentUser ? 'white' : 'black' }}>
-        {message.text}
-      </Text>
+      <Markdown style={markdownStyles}>{message.text}</Markdown>
     </Layout>
   );
 };

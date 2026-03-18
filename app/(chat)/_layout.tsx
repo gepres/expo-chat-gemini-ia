@@ -14,7 +14,7 @@ export default function ChatLayout() {
           headerTintColor: iconColor,
         }}
       >
-        <Stack.Screen name="index" options={{ title: 'Gemini AI' }} />
+        <Stack.Screen name="index" options={{ title: 'CHAT AI' }} />
         <Stack.Screen
           name="basic-prompt"
           options={{ title: 'Prompt básico' }}
