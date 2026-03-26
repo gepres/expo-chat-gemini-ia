@@ -8,12 +8,23 @@ import { create } from 'zustand';
 interface State {
   geminiWriting: boolean;
   messages: Message[];
-  addMessage: (text: string) => void;
+  addMessage: (text: string, attachments: any[]) => void;
   setGeminiWriting: (isWriting: boolean) => void;
 }
 
 
-const createMessage = (text: string, sender: 'user' | 'gemini'): Message => {
+const createMessage = (text: string, sender: 'user' | 'gemini', attachments: any[] = []): Message => {
+  if(attachments?.length > 0) {
+    return {
+      id: uuid.v4(),
+      text,
+      createdAt: new Date(),
+      sender,
+      type: 'image',
+      images: attachments.map((image) => image.uri),
+    }
+  }
+
   return {
     id: uuid.v4(),
     text,
@@ -27,9 +38,9 @@ const createMessage = (text: string, sender: 'user' | 'gemini'): Message => {
 export const useBasicPromptStore = create<State>()((set) => ({
   geminiWriting: false,
   messages: [],
-  addMessage: async (prompt: string) => {
+  addMessage: async (prompt: string, attachments: any[]) => {
 
-    const userMessage = createMessage(prompt, 'user');
+    const userMessage = createMessage(prompt, 'user', attachments);
     const geminiMessage = createMessage('Generaron respuesta...', 'gemini');
 
     set((state) => ({
@@ -48,14 +59,18 @@ export const useBasicPromptStore = create<State>()((set) => ({
     // }))
 
 
+    // console.log('Petición a Gemini con stream');
+
     // Petición a Gemini con stream
-    await GeminiActions.getBasicPromptStream(prompt, (text) => {
+    await GeminiActions.getBasicPromptStream(prompt, attachments, (text) => {
       set((state) => ({
         messages: state.messages.map(
           (msg) => msg.id === geminiMessage.id ? {...msg, text} : msg
         ),
       }))
     });
+
+    // console.log('Respuesta de Gemini con stream');
 
   },
   setGeminiWriting: (isWriting: boolean) => set(({ geminiWriting: isWriting })),
