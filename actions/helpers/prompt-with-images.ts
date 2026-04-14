@@ -6,14 +6,23 @@ export interface FileType {
   type?: string;
 }
 
+interface JsonBody {
+  [key:string]: any;
+}
+
 export const promptWithImages = async (
   endpoint: string,
-  prompt: string,
+  body: JsonBody,
   files: FileType[]
 ): Promise<string> => {
   try {
     const formData = new FormData();
-    formData.append('prompt', prompt);
+
+
+
+    Object.entries(body).forEach(([key, value]) => {
+      formData.append(key, value);
+    })
 
     files.forEach((file) => {
       formData.append('files', {

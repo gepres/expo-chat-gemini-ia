@@ -8,34 +8,26 @@ const API_URL = process.env.EXPO_PUBLIC_GEMINI_API_URL;
 
 
 
-export const getBasicPromptStream = async (prompt: string, files: FileType[], onChunk: (text: string) => void)  => {
+export const getChatStream = async (prompt: string, chatId: string ,files: FileType[], onChunk: (text: string) => void)  => {
     try {
 
       if(files.length > 0) {
-        const response = await promptWithImages('/basic-prompt-stream', {prompt}, files);
+        const response = await promptWithImages('/chat-prompt-stream', {prompt, chatId}, files);
         onChunk(response);
         return;
       }
 
       const formData = new FormData();
       formData.append('prompt', prompt);
+      formData.append('chatId', chatId);
 
-      // files.forEach((file, index) => {
-      //   formData.append(`files`,{
-      //     uri: file.uri,
-      //     type: file.type ?? 'image/jpeg',
-      //     name: file.fileName ?? `image${index}.jpg`,
-      //   } as any);
-      // });
 
-      const response = await fetch(`${API_URL}/basic-prompt-stream`,{
+      const response = await fetch(`${API_URL}/chat-prompt-stream`,{
         method: 'POST',
         headers: {
-          // 'Content-Type': 'application/json',
           'Content-Type': 'multipart/form-data',
           accept: 'plain/text',
         },
-        // body: JSON.stringify({ prompt }),
         body: formData,
       })
   
