@@ -86,7 +86,7 @@ expo-gemini/
 
 ## 🔌 Backend requerido
 
-Esta app **no incluye el servidor**: consume una API REST externa (usualmente el proyecto NestJS hermano del curso) que expone los siguientes endpoints:
+Esta app **no incluye el servidor**: consume una API REST externa (usualmente el proyecto NestJS ([https://github.com/gepres/chat-gemini-ia-nestjs](https://github.com/gepres/chat-gemini-ia-nestjs))) que expone los siguientes endpoints:
 
 | Método | Endpoint | Uso |
 |--------|----------|-----|
@@ -182,7 +182,3 @@ Cuando se adjuntan imágenes, la subida se delega al helper `promptWithImages` q
 El proyecto usa **UI Kitten + Eva Design** con soporte de tema claro/oscuro que respeta el esquema del sistema. Los colores temáticos se consumen desde el hook `useThemeColor`.
 
 ---
-
-## 📝 Licencia
-
-Proyecto educativo — parte del curso **React Native AI con Gemini**.
