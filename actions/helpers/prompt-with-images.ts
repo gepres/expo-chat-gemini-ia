@@ -1,3 +1,4 @@
+import { ImagePickerAsset } from 'expo-image-picker';
 import geminiApi from '../gemini.api';
 
 export interface FileType {
@@ -10,15 +11,13 @@ interface JsonBody {
   [key:string]: any;
 }
 
-export const promptWithImages = async (
+export const promptWithImages = async <T>(
   endpoint: string,
   body: JsonBody,
-  files: FileType[]
-): Promise<string> => {
+  files: (FileType|ImagePickerAsset)[]
+): Promise<T> => {
   try {
     const formData = new FormData();
-
-
 
     Object.entries(body).forEach(([key, value]) => {
       formData.append(key, value);
@@ -32,6 +31,7 @@ export const promptWithImages = async (
       } as unknown as Blob);
     });
 
+    
     const response = await geminiApi.post(endpoint, formData,
         {
             headers: {

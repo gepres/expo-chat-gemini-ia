@@ -12,7 +12,7 @@ export const getBasicPromptStream = async (prompt: string, files: FileType[], on
     try {
 
       if(files.length > 0) {
-        const response = await promptWithImages('/basic-prompt-stream', {prompt}, files);
+        const response = await promptWithImages<string>('/basic-prompt-stream', {prompt}, files);
         onChunk(response);
         return;
       }
